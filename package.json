@@ -23,7 +23,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www -e js,hbs"
+    "dev": "nodemon ./bin/www -e js,hbs",
+    "seed:users": "node ./bin/seeds/seed.user.js",
+    "seed:tags": "node ./bin/seeds/seed.tag.js",
+    "seed:sneakers": "node ./bin/seeds/seed.sneaker.js",
+    "seed:all": "node ./bin/seeds/seed.user.js && ./bin/seeds/seed.tag.js && ./bin/seeds/seed.sneaker.js"
   },
   "keywords": [],
   "author": "",
