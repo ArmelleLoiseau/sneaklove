@@ -8,7 +8,7 @@ const app = express();
 const createError = require("http-errors");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
-const hbo = require("hbs");
+const hbs = require("hbs");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
@@ -20,17 +20,19 @@ app.use(logger("dev"));
 
 // initial config
 app.set("view engine", "hbs");
-app.set("views", __dirname + "/view");
-app.use(express.static("public"));
+app.set("views", __dirname + "views");
+app.use(express.static(__dirname + "public"));
 hbs.registerPartials(__dirname + "/views/partials");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 
 // SESSION SETUP
+
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret:
+      process.env.SESSION_SECRET || "ASecretStringThatSouldBeHARDTOGUESS/CRACK",
     cookie: { maxAge: 60000 }, // in millisec
     store: new MongoStore({
       mongooseConnection: mongoose.connection,
