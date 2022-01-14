@@ -40,11 +40,17 @@ router.get("/create", protectPrivateRoute, async (req, res, next) => {
 });
 
 // => post(/create) => poster le formulaire pour créer une nouvelle paire dans la DB
-router.post("/create", async (req, res, next) => {
+router.post("/create", uploader.single('image'), async (req, res, next) => {
   try {
+    // get most user's input from req.body
     const newSneakers = { ...req.body };
+    // get file if necessary
+    if (req.file) newSneakers.image = req.file.path;
+    else newSneakers.image = undefined;
     console.log(newSneakers);
+    // create new object in db
     await Sneaker.create(newSneakers);
+    req.flash("success", "New pair of sneakers successfully added");
     res.redirect("/dashboard");
   } catch (error) {
     next(error);
@@ -110,9 +116,13 @@ router.get("/edit/:id", protectPrivateRoute, async (req, res, next) => {
 // => post(/update/:id) => poste le formulaire updaté
 router.post("/edit/:id", uploader.single("image"), async (req, res, next) => {
   try {
+    // compile data from user's input
+    const sneakersToUpdate = { ...req.body };
+    if (req.file) sneakersToUpdate.image = req.file.path;
+
     const editedSneakers = await Sneaker.findByIdAndUpdate(
       req.params.id,
-      req.body
+      sneakersToUpdate
     );
     console.log(editedSneakers);
     res.redirect("/dashboard");
