@@ -8,7 +8,7 @@ const sneakerSchema = new Schema ({
     price: Number,
     image: {
         type: String,
-        default: "/public/medias/img/shoe.png"
+        default: "/medias/img/shoe.png"
     },
     category: {
         type : [ String ], 
