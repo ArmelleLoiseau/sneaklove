@@ -1,7 +1,7 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model } = require("mongoose");
 
 const tagSchema = new Schema({
-  label: String
+  label: String,
 });
 
 const Tag = model("tag", tagSchema);

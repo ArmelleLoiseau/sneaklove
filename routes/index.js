@@ -9,6 +9,10 @@ const router = express.Router();
 // -----------------------------\n\n`
 // );
 
+// get (/) => display all sneakers
+// get (/category) => display sneakers par category
+// get (/:id) => display one pair
+
 router.get("/", (req, res) => {
   res.send("foo");
 });
