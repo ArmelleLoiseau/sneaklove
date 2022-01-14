@@ -60,8 +60,8 @@ h2.logo-item {
   margin-left: auto;
 }
 
-.nav-end-item:first-child {
-  margin-right: 1.2rem;
+.nav-end-item {
+margin-left: 1.2rem;
 }
 
 .btn-text {
@@ -73,6 +73,7 @@ h2.logo-item {
 .shop-cart-icon {
   font-size: 0.8rem;
   color: rgb(151, 151, 151);
+  margin-left: 1.2rem;
 }
 
 .shop-cart-icon:hover {
