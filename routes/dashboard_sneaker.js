@@ -58,6 +58,7 @@ router.post("/create", uploader.single('image'), async (req, res, next) => {
 });
 
 // post(/create/tag) => pour ajouter de nouveaux tags dans la db
+// only thing that doesn't work is that the redirect doesn't actually update the tag list
 router.post("/create/tag", (req, res, next) => {
   Tag.findOne(req.body)
     .then((foundTag) => {
