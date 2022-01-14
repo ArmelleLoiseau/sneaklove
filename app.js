@@ -20,8 +20,8 @@ app.use(logger("dev"));
 
 // initial config
 app.set("view engine", "hbs");
-app.set("views", __dirname + "views");
-app.use(express.static(__dirname + "public"));
+app.set("views", __dirname + "/views");
+app.use(express.static(__dirname + "/public"));
 hbs.registerPartials(__dirname + "/views/partials");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -60,6 +60,7 @@ app.use(require("./middlewares/exposeFlashMessage")); // affiche les messages da
 
 // routers
 app.use("/", require("./routes/index"));
+app.use("/", require('./routes/auth'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

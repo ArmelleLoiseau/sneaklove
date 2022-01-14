@@ -3,6 +3,7 @@
     <h1 class="form-title">Welcome Back !</h1>
     <p class="form-subtitle">Enjoy yourself and be comfortable </p>
   </header>
+  {{>flash_message}}
   {{#if msg}}
   <p class="message {{msg.status}}">{{msg.text}}</p>
   {{/if}}
