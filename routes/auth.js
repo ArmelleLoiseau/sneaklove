@@ -1,10 +1,9 @@
 const express = require("express");
 const router = new express.Router();
 
-const User = require('./../models/User');
-const bcrypt = require('bcrypt');
+const User = require("./../models/User");
+const bcrypt = require("bcrypt");
 const protectAuthRoute = require("../middlewares/protectAuthRoute");
-
 
 // - display the signup form
 router.get("/signup", protectAuthRoute, (req, res) => {
@@ -27,19 +26,23 @@ router.get("/logout", (req, res, next) => {
 });
 
 // - register a new user
-router.post('/signup', async (req, res, next) => {
+router.post("/signup", async (req, res, next) => {
   // console.log('--- --- route /signup');
   try {
     // get the user's input
     const newUser = { ...req.body };
     // console.log('req.body', newUser);
     // check if all mandatory fields are present
-    if (!newUser.name || !newUser.lastname || !newUser.email || !newUser.password) {
+    if (
+      !newUser.name ||
+      !newUser.lastname ||
+      !newUser.email ||
+      !newUser.password
+    ) {
       // console.log('one or more fields missing');
       req.flash("error", "All fields are mandatory");
       res.redirect("/signup");
-    }
-    else {
+    } else {
       // check if email exists in db
       const foundUser = await User.findOne({ email: newUser.email });
       // console.log('foundUser', foundUser);
@@ -47,20 +50,21 @@ router.post('/signup', async (req, res, next) => {
         // console.log('before redirect to signup because email already registered')
         req.flash("error", "Email already registered");
         res.redirect("/signup");
-      }
-      else {
+      } else {
         // hash + salt the password
         const hashedPwd = bcrypt.hashSync(newUser.password, 10);
         newUser.password = hashedPwd;
         // console.log(`hashedPwd`, hashedPwd);
         // create the new user in db
         await User.create(newUser);
-        req.flash("success", "Congrats! You are now registered. Please, sign in.");
-        res.redirect('/signin');    
+        req.flash(
+          "success",
+          "Congrats! You are now registered. Please, sign in."
+        );
+        res.redirect("/signin");
       }
     }
-  }
-  catch (error) {
+  } catch (error) {
     // handling errors on form fields
     // console.log("signup - error: ", error);
     let errorMessage = "";
@@ -70,10 +74,10 @@ router.post('/signup', async (req, res, next) => {
     req.flash("error", errorMessage);
     res.redirect("/signup");
   }
-})
+});
 
 // - signin a registered user
-router.post('/signin', async (req, res, next) => {
+router.post("/signin", async (req, res, next) => {
   // console.log('--- --- route /signin');
   try {
     // get the user's input
@@ -84,8 +88,7 @@ router.post('/signin', async (req, res, next) => {
       // console.log('one or more fields missing');
       req.flash("error", "All fields are mandatory");
       res.redirect("/signin");
-    }
-    else {
+    } else {
       // find the user in db
       const foundUser = await User.findOne({ email: email });
       // console.log('foundUser', foundUser);
@@ -93,17 +96,15 @@ router.post('/signin', async (req, res, next) => {
         // console.log('before redirect to signup because email unknown')
         req.flash("error", "Email unknown, please register instead.");
         res.redirect("/signup");
-      }
-      else {
+      } else {
         // compare the passwords via bcrypt
         const isPwdOk = bcrypt.compareSync(password, foundUser.password);
         // console.log(`isPwdOk`, isPwdOk);
         if (!isPwdOk) {
           // password problem
           req.flash("error", "Invalid credentials");
-          res.redirect('/signin');
-        }
-        else {
+          res.redirect("/signin");
+        } else {
           // email & password ok, ready to finish authentication
           // transform the foundUser into an object
           const foundUserObject = foundUser.toObject();
@@ -113,12 +114,11 @@ router.post('/signin', async (req, res, next) => {
           req.session.currentUser = foundUserObject;
           // display success message & redirect
           req.flash("success", "Successfully logged in.");
-          res.redirect('/prod-manage');    
+          res.redirect("/dashboard");
         }
       }
     }
-  }
-  catch (error) {
+  } catch (error) {
     // handling errors on form fields
     // console.log("signin - error: ", error);
     let errorMessage = "";
@@ -129,6 +129,5 @@ router.post('/signin', async (req, res, next) => {
     res.redirect("/signin");
   }
 });
-
 
 module.exports = router;

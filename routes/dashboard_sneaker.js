@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const express = require("express"); // import express in this module
-const { get } = require("express/lib/response");
+const { get, redirect } = require("express/lib/response");
 const router = new express.Router(); // create an app sub-module (router)
 const Sneaker = require("./../models/Sneaker");
 const User = require("./../models/User");
@@ -28,7 +28,6 @@ router.get("/", async (req, res, next) => {
 router.get("/create", async (req, res, next) => {
   try {
     const tags = await Tag.find();
-    console.log(tags);
     res.render("products_add", {
       tags,
       scripts: ["client"],
@@ -52,9 +51,32 @@ router.post("/create", async (req, res, next) => {
 
 // post(/create/tag) => pour ajouter de nouveaux tags dans la db
 router.post("/create/tag", (req, res, next) => {
-  Tag.create(req.body)
-    .then((newTag) => res.status(201))
-    .catch(next);
+  Tag.findOne(req.body)
+    .then((foundTag) => {
+      console.log(`create/tag => foundTag is ${foundTag}`);
+      if (foundTag) {
+        req.flash("error", "This tag already exists");
+        res.redirect("/dashboard/create");
+      } else if (!foundTag) {
+        Tag.create(req.body)
+          .then((newTag) => {
+            res.status(201);
+            req.flash("sucess", "New tag successfully created!");
+            next();
+          })
+          .catch((e) => {
+            req.flash(
+              "error",
+              "Oups the tag couldn't be created, sorryyyyyy :/"
+            );
+            res.redirect("/dashboard/create");
+          });
+      }
+    })
+    .catch((e) => {
+      console.log("what is the error ?", e);
+      req.flash("error", "error");
+    });
 });
 
 // => get(/delete/:id) => delete la paire de sneakers => redirect dashboard
