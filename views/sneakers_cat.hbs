@@ -1,0 +1,18 @@
+<h2>{{this.category}}</h2>
+
+<div class="container">
+
+	{{#each sneakers.category}}
+
+		<div class="card">
+			<img src="{{this.picture}}" alt="{{this.name}}" />
+			<p>{{this.name}}</p>
+            <p>{{this.description}}</p>
+            <p>{{this.price}}</p>
+            <p>{{this.ref}}</p>
+			<a href="/one-product/{{this._id}}">More info...</a>
+		</div>
+
+	{{/each}}
+
+</div>
