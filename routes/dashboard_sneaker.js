@@ -7,6 +7,8 @@ const User = require("./../models/User");
 const Tag = require("./../models/Tag");
 const uploader = require("./../config/cloudinary");
 const path = require("path");
+require("./../middlewares/protectPrivateRoute");
+const { route } = require("express/lib/application");
 
 // this route is prefixed with dashboard
 
