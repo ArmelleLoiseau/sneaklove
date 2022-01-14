@@ -7,14 +7,14 @@ const User = require("./../models/User");
 const Tag = require("./../models/Tag");
 const uploader = require("./../config/cloudinary");
 const path = require("path");
-require("./../middlewares/protectPrivateRoute");
+const protectPrivateRoute = require("./../middlewares/protectPrivateRoute");
 const { route } = require("express/lib/application");
 
 // this route is prefixed with dashboard
 
 //  *** GET THE DASHBOARD LANDING PAGE ***
 
-router.get("/", async (req, res, next) => {
+router.get("/", protectPrivateRoute, async (req, res, next) => {
   try {
     const sneakers = await Sneaker.find();
     console.log(sneakers);
@@ -27,7 +27,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // => get(/create) => le formulaire pour créer une nouvelle paire de sneakers
-router.get("/create", async (req, res, next) => {
+router.get("/create", protectPrivateRoute, async (req, res, next) => {
   try {
     const tags = await Tag.find();
     res.render("products_add", {
@@ -82,7 +82,7 @@ router.post("/create/tag", (req, res, next) => {
 });
 
 // => get(/delete/:id) => delete la paire de sneakers => redirect dashboard
-router.get("/delete/:id", async (req, res, next) => {
+router.get("/delete/:id", protectPrivateRoute, async (req, res, next) => {
   try {
     console.log(req.params.id);
     const deletedSneakers = await Sneaker.findByIdAndDelete(req.params.id);
@@ -94,7 +94,7 @@ router.get("/delete/:id", async (req, res, next) => {
 });
 
 // => get(/update/:id) => affiche le formulaire
-router.get("/edit/:id", async (req, res, next) => {
+router.get("/edit/:id", protectPrivateRoute, async (req, res, next) => {
   try {
     const tags = await Tag.find();
     const sneaker = await Sneaker.findById(req.params.id);
